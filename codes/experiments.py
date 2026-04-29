@@ -53,8 +53,8 @@ class Experiments:
     @staticmethod
     def main_loop():
 
-        n_trials = 3
-        total_reps = 3
+        n_trials = 2000
+        total_reps = 20
 
         all_dataset_names, all_smote_variant_names, all_model_names = Experiments.init_experiment()
         start_time = time.time()
