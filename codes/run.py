@@ -26,6 +26,7 @@ import time
 
 from stats import Stats
 from plots import Plots
+from runtime_experiment import Runtime
 
 # ---------------------------------------------------------------------------
 # Ensure the codes/ directory is on sys.path so sibling modules resolve
@@ -109,6 +110,12 @@ def run_plots():
     print("Generating RQ3 plot …")
     Plots.RQ3(rq3_df)
     print("  RQ3 done.")
+
+    print("Generating RQ4 plot …")
+    runtime_df = Runtime.load_runtime_data()
+    runtime_df, runtime_summary = Runtime.compute_stats(runtime_df)
+    Runtime.plot_runtime_kde(runtime_summary)
+    print("  RQ4 done.")
 
     print("\nAll figures generated.")
 

@@ -64,7 +64,7 @@ class Stats:
             all_perf['model'] = all_perf['model'].astype(str).str.replace(r'(?<!_)_(?!_)', '-', regex=True)
             all_perf['ovs'] = all_perf['ovs'].astype(str).str.replace(r'(?<!_)_(?!_)', '-', regex=True).str.replace('polynom-fit-SMOTE-bus', 'polynom-fit-SMOTE')
 
-            in_paper_ovs = ['None', 'MAHAKIL'] + [
+            in_paper_ovs = ['None', 'MAHAKIL', 'ROS', 'COSTE'] + [
                 "SMOTE", "SMOTE-TomekLinks", "SMOTE-ENN", "Borderline-SMOTE1", "Borderline-SMOTE2", "AHC", "LLE-SMOTE", "cluster-SMOTE",
                 "distance-SMOTE", "ADASYN", "SMMO", "polynom-fit-SMOTE", "Stefanowski", "ADOMS", "Safe-Level-SMOTE", "MSMOTE",
                 "ISOMAP-Hybrid", "DE-oversampling", "CE-SMOTE", "Edge-Det-SMOTE", "SMOBD", "SUNDO", "MSYN", "LN-SMOTE", "CBSO", "E-SMOTE",

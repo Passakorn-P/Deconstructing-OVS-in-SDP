@@ -15,6 +15,7 @@ Deconstructing_OVS_in_SDP/
 │   ├── experiments.py           # Core HPO experiment loop
 │   ├── optuna_db_helpers.py     # PostgreSQL helpers for Optuna (used specifically for the DF learning algorithm)
 │   ├── plots.py                 # Publication figure generation (RQ1-RQ3)
+│   ├── runtime_experiment.py    # Oversampling runtime aggregation and RQ4 figure generation
 │   ├── stats.py                 # Statistical tests and result aggregation
 │   └── patch/
 │       ├── cascadeForestWrapper.py   # scikit-learn compatibility patch for deep-forest
@@ -115,17 +116,19 @@ python run.py --stage experiment
 # Stage 2: Aggregate results and run statistical tests
 python run.py --stage stats
 
-# Stage 3: Generate all publication figures
+# Stage 3: Generate all publication figures (RQ1-RQ4)
 python run.py --stage plots
 ```
 
+> **Note (RQ4):** The RQ4 figure (oversampling runtime distribution) is generated as part of the `plots` stage via `runtime_experiment.py`. It reads pre-collected per-dataset timing data (`time_records`, `cur_oversampler`, `dataset_name`) from `results/exp2/<dataset>.parquet`. This timing data is produced by a separate runtime-measurement run and is not created by `--stage experiment`; ensure `results/exp2/` is populated before running `--stage plots`.
+
 ### Output paths (relative to project root)
 
-| Stage | Output                                                                      |
-|---|-----------------------------------------------------------------------------|
-| `experiment` | `results/exp/<dataset>__<model>.parquet`                                    |
-| `stats` | `results/stats/rq1_result_df.pkl`, `rq2_result_df.pkl`, `rq3_result_df.pkl` |
-| `plots` | `results/figures/`                                                          |
+| Stage | Output                                                                                |
+|---|----------------------------------------------------------------------------------------|
+| `experiment` | `results/exp/<dataset>__<model>.parquet`                                          |
+| `stats` | `results/stats/rq1_result_df.pkl`, `rq2_result_df.pkl`, `rq3_result_df.pkl`             |
+| `plots` | `results/figures/RQ1_*.eps`, `RQ2.eps`, `RQ3.eps`, `RQ4.eps`                            |
 
 ---
 
@@ -133,8 +136,8 @@ python run.py --stage plots
 
 | Parameter               | Configuration                                                                                                                                                         |
 |:------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Datasets**            | 20 SDP benchmark datasets (located in `datasets/`)                                                                                                                    |
-| **OVS Techniques**      | 87 total (85 SMOTE variants + MAHAKIL + No-sampling)                                                                                                                  |
+| **Datasets**            | 25 SDP benchmark datasets (located in `datasets/`)                                                                                                                    |
+| **OVS Techniques**      | 89 total (87 SMOTE variants + COSTE + MAHAKIL + ROS + No-sampling)                                                                                                    |
 | **Learning Algorithms** | ANN, CART, DF, DNN, GBM, KNN, RF, SVM                                                                                                                                 |
 | **HPO Budget**          | Maximum 2,000 trials per run (Early stopping patience = 20). *Note: Reduce this parameter substantially to verify pipeline execution flow prior to full replication.* |
 | **Repetitions**         | 20 independent repetitions per configuration. *Note: Reduce this parameter for initial pipeline verification.*                                                        |
@@ -142,13 +145,13 @@ python run.py --stage plots
 | **CV strategy (HPO)**   | Stratified K-Fold (k = min(minority class size, 10))                                                                                                                  |
 | **Metrics reported**    | AUC, MCC, PD (Recall), PF (False Alarm)                                                                                                                               |
 | **Statistical test**    | Brunner-Munzel (`WRS::bprm`), α = 0.05                                                                                                                                |
-| **Effect size**         | Cliff's delta (`WRS::cid`), threshold = 0.147 (negligible)                          |
+| **Effect size**         | Cliff's delta (`WRS::cid`), threshold = 0.147 (negligible)                                                                                                            |
 
 ---
 
 ## Datasets
 
-The 20 benchmark datasets are located in the `datasets/` directory as CSV files. Each dataset utilizes static software metrics as independent features. The dependent `bug` variable records the absolute defect count, which is strictly binarized (defects > 0 → 1) to formulate the binary classification task.
+The 25 benchmark datasets are located in the `datasets/` directory as CSV files. Each dataset utilizes static software metrics as independent features. The dependent `bug` variable records the absolute defect count, which is strictly binarized (defects > 0 → 1) to formulate the binary classification task.
 
 
 ---

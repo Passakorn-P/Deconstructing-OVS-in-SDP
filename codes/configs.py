@@ -19,15 +19,15 @@ from patch.cascadeForestWrapper import CascadeForestWrapper
 class Configurations:
     @staticmethod
     def get_dataset_names():
-        dataset_names = ['ant-1.3.csv', 'ant-1.4.csv', 'ant-1.5.csv', 'ant-1.6.csv',
+        dataset_names = ['ant-1.3.csv', 'ant-1.4.csv', 'ant-1.5.csv', 'ant-1.6.csv', 'ant-1.7.csv',
                          'arc.csv',
                          'camel-1.4.csv', 'camel-1.6.csv',
                          'ivy-1.4.csv', 'ivy-2.0.csv',
-                         'jedit-4.0.csv', 'jedit-4.1.csv', 'jedit-4.2.csv',
-                         'log4j-1.0.csv',
+                         'jedit-4.0.csv', 'jedit-4.1.csv', 'jedit-4.2.csv', 'jedit-4.3.csv',
+                         'log4j-1.0.csv', 'log4j-1.1.csv',
                          'pbeans2.csv',
                          'redaktor.csv',
-                         'synapse-1.0.csv',
+                         'synapse-1.0.csv', 'synapse-1.2.csv',
                          'systemdata.csv',
                          'tomcat.csv',
                          'xerces-1.2.csv', 'xerces-1.3.csv']
@@ -37,7 +37,7 @@ class Configurations:
     @staticmethod
     def get_all_smote_variants():
         all_smote_variants = [s.__name__ for s in smote_variants.get_all_oversamplers()]
-        all_smote_variants = ['None', 'MAHAKIL'] + all_smote_variants
+        all_smote_variants = ['None', 'MAHAKIL', 'ROS', 'COSTE'] + all_smote_variants
         return all_smote_variants
 
     @staticmethod

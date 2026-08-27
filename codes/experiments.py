@@ -35,6 +35,8 @@ from sklearn.metrics import precision_score, recall_score, roc_auc_score, f1_sco
 from sklearn.preprocessing import MinMaxScaler
 
 from patch.mahakil import Mahakil
+from patch.ros import ROS
+from patch.coste import COSTE
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
@@ -53,8 +55,8 @@ class Experiments:
     @staticmethod
     def main_loop():
 
-        n_trials = 3
-        total_reps = 3
+        n_trials = 2000
+        total_reps = 20
 
         all_dataset_names, all_smote_variant_names, all_model_names = Experiments.init_experiment()
         start_time = time.time()
@@ -354,6 +356,12 @@ class Experiments:
         if cur_ovs == 'MAHAKIL':
             mahakil = Mahakil()
             X_train_resampled, y_train_resampled = mahakil.fit_resample(X_train, y_train)
+        elif cur_ovs == 'COSTE':
+            coste = COSTE()
+            X_train_resampled, y_train_resampled = coste.fit_sample(X_train, y_train)
+        elif cur_ovs == 'ROS':
+            ros = ROS()
+            X_train_resampled, y_train_resampled = ros.fit_sample(X_train, y_train)
         elif cur_ovs == 'None':
             X_train_resampled, y_train_resampled = X_train, y_train
         else:
