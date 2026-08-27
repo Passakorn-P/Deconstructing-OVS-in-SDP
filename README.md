@@ -19,7 +19,9 @@ Deconstructing_OVS_in_SDP/
 │   ├── stats.py                 # Statistical tests and result aggregation
 │   └── patch/
 │       ├── cascadeForestWrapper.py   # scikit-learn compatibility patch for deep-forest
-│       └── mahakil.py               # MAHAKIL oversampling implementation
+│       ├── coste.py                 # COSTE oversampling implementation
+│       ├── mahakil.py               # MAHAKIL oversampling implementation
+│       └── ros.py                   # ROS (Random OverSampling) implementation
 ├── datasets/                    # 20 SDP benchmark datasets (CSV)
 ├── results/                     # Generated at runtime: Parquet + pkl + figures
 └── requirements.txt
@@ -93,13 +95,28 @@ The experiment runner automatically calls `OptunaDBHelpers.fast_recreate()` befo
 
 ---
 
-### 4 — MAHAKIL oversampling
+### 4) Techniques outside `smote-variants`
 
-The MAHAKIL technique is included directly in `codes/patch/Mahakil.py`.  
+Three oversampling techniques are not sourced from the `smote-variants` package and are instead included directly as local modules under `codes/patch/`. No additional installation is required for any of them.
+
+#### 4.1) COSTE
+
+The COSTE technique is included directly in `codes/patch/coste.py`.  
+It is a pure-Python reconstruction of the algorithm described in:  
+Feng, S., Keung, J., Yu, X., Xiao, Y., Bennin, K.E., Kabir, M.A., Zhang, M. (2021). *"COSTE: Complexity-based OverSampling TEchnique to alleviate the class imbalance problem in software defect prediction."* Information and Software Technology, 129, 106432.
+
+To resolve inconsistencies between the paper's pseudocode and its textual narrative, divergences from a strict implementation of Algorithm 1 (re-ranking per pass, batch-only merging, the explicit binary-class assumption, and the nested subfold AUC fitness evaluation) are documented in the module's docstring.
+
+#### 4.2) MAHAKIL
+
+The MAHAKIL technique is included directly in `codes/patch/mahakil.py`.  
 It is a pure-Python re-implementation adapted from the original repository:  
 **<https://github.com/ai-se/MAHAKIL_imbalance>**
 
-No additional installation is required; it is utilized as a local module through the patch/ package.
+#### 4.3) ROS
+
+The ROS (Random OverSampling) technique is included directly in `codes/patch/ros.py`.  
+It is a thin wrapper around `imblearn.over_sampling.RandomOverSampler`, exposing the same `fit_resample` / `fit_sample` interface used by the other patched techniques.
 
 ---
 
